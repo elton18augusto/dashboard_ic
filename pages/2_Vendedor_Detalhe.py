@@ -9,13 +9,14 @@ from vendedor_shared import (
     _load_data,
     _metric_df,
     _render_totais,
+    FRANQUIAS
 )
 
 
 st.title("Detalhe por vendedor (todos)")
 
 today = date.today()
-franquias = [(119, "Salvador"), (108, "Fortaleza")]
+franquias = FRANQUIAS
 
 cols_select = st.columns(3)
 with cols_select[0]:

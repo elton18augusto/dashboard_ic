@@ -13,6 +13,7 @@ from vendedor_shared import (
     _metric_df,
     _render_colored_metric,
     _render_totais,
+    FRANQUIAS
 )
 
 
@@ -21,7 +22,7 @@ st.title("Dashboard - Vendedores")
 st.caption("Analise geral, por vendedor e por curso.")
 
 today = date.today()
-franquias = [(119, "Salvador"), (108, "Fortaleza")]
+franquias = FRANQUIAS
 cols_select = st.columns(4)
 with cols_select[0]:
     franquia_sel = st.selectbox(

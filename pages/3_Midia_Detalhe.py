@@ -9,6 +9,7 @@ from vendedor_shared import (
     _load_data,
     _metric_df,
     _render_totais,
+    FRANQUIAS
 )
 
 st.set_page_config(page_title="Detalhe por mídia", layout="wide")
@@ -19,7 +20,7 @@ st.title("Detalhe por mídia (todos)")
 # =============================
 
 today = date.today()
-franquias = [(119, "Salvador"), (108, "Fortaleza")]
+franquias = FRANQUIAS
 
 cols_select = st.columns(3)
 
