@@ -182,7 +182,7 @@ else:
     ).resolve_scale(y="independent").encode(y=alt.Y(title=None, axis=None))
     st.altair_chart(chart, width='stretch')
 
-    st.header("Performance por curso", divider="yellow")
+    # st.header("Performance por curso", divider="yellow")
     curso = _metric_df(
         df=df,
         lead_col=lead_col,
@@ -203,42 +203,42 @@ else:
         days_elapsed=dias_decorridos,
         days_total=dias_no_mes,
     )
-    st.dataframe(curso,
-                 width='stretch',
-                 hide_index=True,
-                 column_config={
-                     "qtd_leads": st.column_config.NumberColumn(
-                         "Leads", format="%,.0f"
-                     ),
-                     "qtd_contratos": st.column_config.NumberColumn(
-                         "Contratos", format="%,.0f"
-                     ),
-                     "faturamento": st.column_config.NumberColumn(
-                         "Faturamento", format="R$ %,.2f"
-                     ),
-                     "receita": st.column_config.NumberColumn(
-                         "Receita", format="R$ %,.2f"
-                     ),
-                     "proj_leads": st.column_config.NumberColumn(
-                         "Proj. Leads", format="%,.0f"
-                     ),
-                     "proj_contratos": st.column_config.NumberColumn(
-                         "Proj. Contratos", format="%,.0f"
-                     ),
-                     "proj_faturamento": st.column_config.NumberColumn(
-                         "Proj. Faturamento", format="R$ %,.2f"
-                     ),
-                     "proj_receita": st.column_config.NumberColumn(
-                         "Proj. Receita", format="R$ %,.2f"
-                     ),
-                     "conversao": st.column_config.NumberColumn(
-                         "Conversão", format="%.0f %%"
-                     ),
-                     "receita_percentual": st.column_config.NumberColumn(
-                         "Receita %", format="%.0f %%"
-                     ),
-                 }
-                 )
+    # st.dataframe(curso,
+    #              width='stretch',
+    #              hide_index=True,
+    #              column_config={
+    #                  "qtd_leads": st.column_config.NumberColumn(
+    #                      "Leads", format="%,.0f"
+    #                  ),
+    #                  "qtd_contratos": st.column_config.NumberColumn(
+    #                      "Contratos", format="%,.0f"
+    #                  ),
+    #                  "faturamento": st.column_config.NumberColumn(
+    #                      "Faturamento", format="R$ %,.2f"
+    #                  ),
+    #                  "receita": st.column_config.NumberColumn(
+    #                      "Receita", format="R$ %,.2f"
+    #                  ),
+    #                  "proj_leads": st.column_config.NumberColumn(
+    #                      "Proj. Leads", format="%,.0f"
+    #                  ),
+    #                  "proj_contratos": st.column_config.NumberColumn(
+    #                      "Proj. Contratos", format="%,.0f"
+    #                  ),
+    #                  "proj_faturamento": st.column_config.NumberColumn(
+    #                      "Proj. Faturamento", format="R$ %,.2f"
+    #                  ),
+    #                  "proj_receita": st.column_config.NumberColumn(
+    #                      "Proj. Receita", format="R$ %,.2f"
+    #                  ),
+    #                  "conversao": st.column_config.NumberColumn(
+    #                      "Conversão", format="%.0f %%"
+    #                  ),
+    #                  "receita_percentual": st.column_config.NumberColumn(
+    #                      "Receita %", format="%.0f %%"
+    #                  ),
+    #              }
+    #              )
 
     params_cache = st.session_state.params_cache or {}
     meta_df = (_load_metas(params_cache)
@@ -256,8 +256,14 @@ else:
     curso_meta = curso.copy()
     curso_meta = curso_meta.reset_index()
     meta_view = curso_meta[
-        [curso_col, "qtd_contratos", "proj_contratos",
-         "faturamento", "proj_faturamento"]
+        [curso_col,
+         "qtd_leads",
+         "conversao",
+         "qtd_contratos",
+         "proj_contratos",
+         "faturamento",
+         "proj_faturamento"
+         ]
     ].merge(
         meta_df,
         left_on=curso_col,
@@ -268,6 +274,12 @@ else:
         meta_view[curso_col]
     )
 
+    meta_view["qtd_leads"] = pd.to_numeric(
+        meta_view["qtd_leads"], errors="coerce"
+    ).fillna(0)
+    meta_view["conversao"] = pd.to_numeric(
+        meta_view["conversao"], errors="coerce"
+    ).fillna(0)
     meta_view["qtd_contratos"] = pd.to_numeric(
         meta_view["qtd_contratos"], errors="coerce"
     ).fillna(0)
@@ -364,6 +376,8 @@ else:
             "meta_qtd", ascending=False)
         meta_table = meta_view[[
             "curso_agrupado",
+            "qtd_leads",
+            "conversao",
             "meta_qtd",
             "qtd_contratos",
             "atingimento_qtd",
@@ -384,6 +398,12 @@ else:
             column_config={
                 "curso_agrupado": st.column_config.TextColumn(
                     "Curso agrupado"
+                ),
+                "qtd_leads": st.column_config.NumberColumn(
+                    "Leads", format="%,.0f"
+                ),
+                "conversao": st.column_config.NumberColumn(
+                    "Conversão", format="%.0f %%"
                 ),
                 "meta_qtd": st.column_config.NumberColumn(
                     "Meta (contratos)", format="%,.0f"
@@ -464,78 +484,78 @@ else:
                  }
                  )
 
-    st.header("Análise por curso e mídia", divider="yellow")
+    # st.header("Análise por curso e mídia", divider="yellow")
 
-    midia_col = "midia"
+    # midia_col = "midia"
 
-    # 🔹 Métricas por curso + mídia
-    curso_midia = _metric_df(
-        df=df,
-        lead_col=lead_col,
-        contrato_col=contrato_col,
-        fat_col=fat_col,
-        rec_col=rec_col,
-        days_elapsed=dias_decorridos,
-        days_total=dias_no_mes,
-        group_col=[curso_col, midia_col],
-    )
+    # # 🔹 Métricas por curso + mídia
+    # curso_midia = _metric_df(
+    #     df=df,
+    #     lead_col=lead_col,
+    #     contrato_col=contrato_col,
+    #     fat_col=fat_col,
+    #     rec_col=rec_col,
+    #     days_elapsed=dias_decorridos,
+    #     days_total=dias_no_mes,
+    #     group_col=[curso_col, midia_col],
+    # )
 
-    curso_midia = (
-        curso_midia
-        .reset_index()
-        .sort_values("qtd_contratos", ascending=False)
-    )
+    # curso_midia = (
+    #     curso_midia
+    #     .reset_index()
+    #     .sort_values("qtd_contratos", ascending=False)
+    # )
 
-    # 🔹 Filtro por curso (opcional - melhora usabilidade)
-    cursos_disponiveis = sorted(
-        df[curso_col].dropna().unique())  # type: ignore
-    curso_sel = st.selectbox(
-        "Filtrar curso",
-        ["Todos"] + cursos_disponiveis,
-        key="curso_midia_filtro"
-    )
+    # # 🔹 Filtro por curso (opcional - melhora usabilidade)
+    # cursos_disponiveis = sorted(
+    #     df[curso_col].dropna().unique())  # type: ignore
+    # curso_sel = st.selectbox(
+    #     "Filtrar curso",
+    #     ["Todos"] + cursos_disponiveis,
+    #     key="curso_midia_filtro"
+    # )
 
-    if curso_sel != "Todos":
-        curso_midia = curso_midia[curso_midia[curso_col] == curso_sel]
+    # if curso_sel != "Todos":
+    #     curso_midia = curso_midia[curso_midia[curso_col] == curso_sel]
 
-    # 🔹 Pivot (visão executiva)
-    pivot = curso_midia.pivot_table(
-        index=curso_col,
-        columns=midia_col,
-        values="qtd_contratos",
-        aggfunc="sum",
-        fill_value=0,
-    )
+    # # 🔹 Pivot (visão executiva)
+    # pivot = curso_midia.pivot_table(
+    #     index=curso_col,
+    #     columns=midia_col,
+    #     values="qtd_contratos",
+    #     aggfunc="sum",
+    #     fill_value=0,
+    # )
 
-    st.subheader("Contratos por curso x mídia")
-    st.dataframe(pivot, width="stretch")
+    # st.subheader("Contratos por curso x mídia")
+    # st.dataframe(pivot, width="stretch")
 
-    # 🔹 Tabela detalhada
-    st.subheader("Detalhamento")
-    st.dataframe(
-        curso_midia,
-        width="stretch",
-        hide_index=True,
-        column_config={
-            curso_col: st.column_config.TextColumn("Curso"),
-            midia_col: st.column_config.TextColumn("Mídia"),
-            "qtd_leads": st.column_config.NumberColumn(
-                "Leads", format="%,.0f"
-            ),
-            "qtd_contratos": st.column_config.NumberColumn(
-                "Contratos", format="%,.0f"
-            ),
-            "faturamento": st.column_config.NumberColumn(
-                "Faturamento", format="R$ %,.2f"
-            ),
-            "receita": st.column_config.NumberColumn(
-                "Receita", format="R$ %,.2f"
-            ),
-            "conversao": st.column_config.NumberColumn(
-                "Conversão", format="%.1f %%"
-            ),
-        },
-    )
+    # # 🔹 Tabela detalhada
+    # st.subheader("Detalhamento")
+    # st.dataframe(
+    #     curso_midia,
+    #     width="stretch",
+    #     hide_index=True,
+    #     column_config={
+    #         curso_col: st.column_config.TextColumn("Curso"),
+    #         midia_col: st.column_config.TextColumn("Mídia"),
+    #         "qtd_leads": st.column_config.NumberColumn(
+    #             "Leads", format="%,.0f"
+    #         ),
+    #         "qtd_contratos": st.column_config.NumberColumn(
+    #             "Contratos", format="%,.0f"
+    #         ),
+    #         "faturamento": st.column_config.NumberColumn(
+    #             "Faturamento", format="R$ %,.2f"
+    #         ),
+    #         "receita": st.column_config.NumberColumn(
+    #             "Receita", format="R$ %,.2f"
+    #         ),
+    #         "conversao": st.column_config.NumberColumn(
+    #             "Conversão", format="%.1f %%"
+    #         ),
+    #     },
+    # )
 
 # st.header("Análise Individual por Vendedor", divider="yellow")
 # vendedor_sel = st.selectbox(
