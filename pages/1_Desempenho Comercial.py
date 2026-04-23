@@ -380,6 +380,7 @@ else:
             "conversao",
             "meta_qtd",
             "qtd_contratos",
+            "proj_contratos",
             "atingimento_qtd",
             "faturamento",
             "meta_fat",
@@ -413,6 +414,9 @@ else:
                 ),
                 "atingimento_qtd": st.column_config.NumberColumn(
                     "Atingimento (contratos)", format="%.0f %%"
+                ),
+                "proj_contratos": st.column_config.NumberColumn(
+                    "Proj. Contratos", format="%,.0f"
                 ),
                 "faturamento": st.column_config.NumberColumn(
                     "Faturamento", format="R$ %,.2f"
