@@ -6,7 +6,7 @@ import streamlit as st
 
 from db import get_engine, load_sql, query_df
 
-FRANQUIAS = [(119, "Salvador"), (108, "Fortaleza"), (24, "Campo Limpo")]
+FRANQUIAS = [(119, "Salvador"), (108, "Fortaleza"), (24, "Campo Limpo"), (104, "Guarulhos"), (58, "Americana")]
 
 
 @st.cache_resource

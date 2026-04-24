@@ -1,0 +1,7 @@
+.env
+__pycache__/
+venv/
+.gitignore
+*.db
+*bin
+client_secret_*.json
